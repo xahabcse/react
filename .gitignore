@@ -1,0 +1,6 @@
+# Local Claude Code config
+.claude/
+
+# Dependencies / build (also covered by react-basics/.gitignore)
+node_modules/
+dist/

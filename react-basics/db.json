@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "name": "Laptop",
+      "description": "High performance laptop for developers",
+      "price": 75000,
+      "inStock": false,
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "Wireless Mouse",
+      "description": "Ergonomic wireless mouse",
+      "price": 1500,
+      "inStock": true
+    },
+    {
+      "name": "Mechanical Keyboard",
+      "description": "RGB mechanical keyboard with Cherry MX switches",
+      "price": 8500,
+      "inStock": false,
+      "id": 3
+    },
+    {
+      "name": "Version-1.0",
+      "description": "dgsdfg",
+      "price": 125,
+      "inStock": true,
+      "id": 4
+    }
+  ]
+}

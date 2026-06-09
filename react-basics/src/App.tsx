@@ -12,6 +12,7 @@ import ProductEditPage from "./pages/ProductEditPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import Counter from "./components/Counter";
 import Todo from "./components/Todo";
+import Error from "./components/Error";
 
 export default function App() {
   return (
@@ -42,10 +43,7 @@ export default function App() {
           <Route path="/todo" element={<Todo />} />
 
           {/* "*" = if nothing above matched (404 page) */}
-          <Route
-            path="*"
-            element={<p className="text-center text-xl">404 — Page Not Found</p>}
-          />
+          <Route path="*" element={<Error />} />
         </Routes>
       </main>
     </BrowserRouter>

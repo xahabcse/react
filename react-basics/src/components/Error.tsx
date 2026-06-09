@@ -25,14 +25,14 @@ export default function Error() {
           The page you are looking for does not exist or has been moved.
         </p>
 
-        {/* Link (NOT a plain <a>) = goes home WITHOUT a full page reload —
-            that's the SPA navigation. to="/" lands on home, which App.tsx
-            then redirects onward to /products. */}
+        {/* Link (NOT a plain <a>) = goes back WITHOUT a full page reload —
+            that's the SPA navigation. We send the user to /products (the real
+            landing page); "/" has no route anymore, so it would just 404 again. */}
         <Link
-          to="/"
+          to="/products"
           className="group flex items-center gap-1 bg-white hover:bg-gray-200 px-7 py-2.5 text-gray-800 rounded-full mt-10 font-medium active:scale-95 transition-all"
         >
-          Back to Home
+          Back to Products
         </Link>
       </div>
     </>

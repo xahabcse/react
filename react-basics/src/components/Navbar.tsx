@@ -27,9 +27,6 @@ export default function Navbar() {
           <NavLink to="/products" className={linkClass}>
             Products
           </NavLink>
-          <NavLink to="/products/create" className={linkClass}>
-            Add New
-          </NavLink>
           <NavLink to="/counter" className={linkClass}>
             Counter
           </NavLink>

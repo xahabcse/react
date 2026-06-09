@@ -10,6 +10,11 @@ import { productService } from "../services/product.service";
 import ProductCard from "../components/ProductCard";
 import Spinner from "../components/Spinner";
 import type { Product } from "../types/product.types";
+import { Link } from "react-router-dom";
+
+// the route the "Add New" button links to — kept as a constant so it's
+// easy to reuse and change in one place (no magic strings scattered around)
+const createPage = "/products/create";
 
 export default function ProductListPage() {
   const [products, setProducts] = useState<Product[]>([]); // the list coming from the server
@@ -46,13 +51,13 @@ export default function ProductListPage() {
 
   // filter by the search text — computed during render (a derived value, no separate state needed).
   const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+    p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="text-2xl font-semibold text-gray-800">
           Products ({filtered.length})
         </h2>
         <input
@@ -60,8 +65,19 @@ export default function ProductListPage() {
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)} // typing updates state → list re-filters
-          className="border border-gray-300 rounded-lg px-3 py-2 w-64 focus:ring-2 focus:ring-blue-500"
+          className="border border-green-500 rounded-lg px-3 py-2 w-64 focus:ring-2 focus:ring-blue-500"
         />
+        {/* "Add New" = a Link styled to look like a button. It navigates to the
+            create page without a full reload (SPA). inline-block makes the
+            padding behave like a real button (an <a> is inline by default). */}
+        <div className=" flex justify-end mb-3">
+          <Link
+            to={createPage}
+            className="inline-block bg-teal-600 text-white text-xl px-5 py-2 rounded-lg hover:bg-teal-700 active:scale-95 transition"
+          >
+            Add New
+          </Link>
+        </div>
       </div>
 
       {filtered.length === 0 ? (

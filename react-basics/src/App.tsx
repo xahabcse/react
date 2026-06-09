@@ -1,10 +1,18 @@
 // =============================================================
 // App.tsx — the app's "route map" (which URL shows which page)
 // -------------------------------------------------------------
-// .NET analogy: this is like the MapControllerRoute(...) routing config,
-// and the <Navbar/> + <main> part is like the _Layout.cshtml common layout.
+// .NET analogy: this is like the MapControllerRoute(...) routing config.
+// The <Layout/> below (Navbar + <main>) is like _Layout.cshtml — the
+// shared shell that wraps the normal pages. The 404 page is left OUT of
+// that shell on purpose, so it shows with NO Navbar.
 // =============================================================
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProductListPage from "./pages/ProductListPage";
 import ProductCreatePage from "./pages/ProductCreatePage";
@@ -14,18 +22,38 @@ import Counter from "./components/Counter";
 import Todo from "./components/Todo";
 import Error from "./components/Error";
 
+// -------------------------------------------------------------
+// Layout = the shared shell (Navbar + page container) that wraps
+// every NORMAL page. <Outlet/> is the empty slot where the matched
+// child page gets dropped in — same idea as @RenderBody() in .NET's
+// _Layout.cshtml. Anything outside this Layout shows with no Navbar.
+// -------------------------------------------------------------
+function Layout() {
+  return (
+    <>
+      {/* Navbar lives inside Layout now — so it only shows on pages that use Layout */}
+      <Navbar />
+
+      {/* every page's content sits in the middle of this container */}
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* the matched child page renders right here */}
+        <Outlet />
+      </main>
+    </>
+  );
+}
+
 export default function App() {
   return (
     // BrowserRouter = turns on routing for the whole app. The page changes
     // based on the URL, but the page never fully reloads — that's the SPA magic.
     <BrowserRouter>
-      {/* Navbar is outside Routes — so it always shows on top of every page */}
-      <Navbar />
-
-      {/* every page's content sits in the middle of this container */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {/* Routes = a list of Route entries; the one matching the current URL is shown */}
-        <Routes>
+      {/* Routes = a list of Route entries; the one matching the current URL is shown */}
+      <Routes>
+        {/* ---- Pages WITH the Navbar ---- */}
+        {/* This parent Route has NO path — it only wraps its children in <Layout/>.
+            Each child renders inside Layout's <Outlet/>, so they all get the Navbar. */}
+        <Route element={<Layout />}>
           {/* visiting "/" redirects straight to /products. replace = back button won't return to "/" */}
           <Route path="/" element={<Navigate to="/products" replace />} />
 
@@ -41,11 +69,13 @@ export default function App() {
 
           {/* learning playground: a simple to-do list (array state practice) */}
           <Route path="/todo" element={<Todo />} />
+        </Route>
 
-          {/* "*" = if nothing above matched (404 page) */}
-          <Route path="*" element={<Error />} />
-        </Routes>
-      </main>
+        {/* ---- Page WITHOUT the Navbar ---- */}
+        {/* "*" = if nothing above matched (404 page). It sits OUTSIDE <Layout/>,
+            so it renders on its own — no Navbar on top. */}
+        <Route path="*" element={<Error />} />
+      </Routes>
     </BrowserRouter>
   );
 }
@@ -76,8 +106,14 @@ export default function App() {
    → As soon as it renders, it sends you to another route (declarative
      redirect). To redirect from inside code, use useNavigate() instead.
 
-   Q6. Why is Navbar placed outside Routes?
-   → Things that should appear on every page (header/footer) go outside
-     Routes; they stay put when the page changes, and only the content
-     inside Routes swaps.
+   Q6. How do you show the Navbar on every page EXCEPT one (like the 404)?
+   → Use a "layout route": a parent <Route element={<Layout/>}> with NO
+     path. Put the shared UI (Navbar) inside Layout, with an <Outlet/>
+     where child pages render. Pages you want WITHOUT the shell (the 404)
+     go as siblings, outside the layout route.
+
+   Q7. What is <Outlet/>?
+   → It's the placeholder inside a layout where the matched child route
+     renders — like @RenderBody() in .NET's _Layout.cshtml. Without it,
+     the child pages would have nowhere to show.
    ============================================================= */

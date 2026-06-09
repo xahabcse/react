@@ -8,6 +8,7 @@
 import { useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react"; // types only, not needed at runtime
 import type { ProductFormData } from "../types/product.types";
+import { Link } from "react-router-dom";
 
 interface ProductFormProps {
   initialData?: ProductFormData; // Edit passes existing data; Create doesn't → so optional (?)
@@ -42,17 +43,18 @@ export default function ProductForm({
 
   // Typing in any input runs this single function (shared by all fields).
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value, type } = e.target; // the input's name attribute tells us which field
     setForm((prev) => ({
       ...prev, // keep all previous fields unchanged (spread = copy)
-      [name]: // change only this one field ([name] = computed property name)
+      // change only this one field ([name] = computed property name)
+      [name]:
         type === "checkbox"
           ? (e.target as HTMLInputElement).checked // checkbox → true/false
           : type === "number"
-          ? Number(value) // number input → convert string to number
-          : value, // everything else → string
+            ? Number(value) // number input → convert string to number
+            : value, // everything else → string
     }));
   };
 
@@ -143,14 +145,25 @@ export default function ProductForm({
         <label className="text-sm text-gray-700">In Stock</label>
       </div>
 
-      {/* while submitting, disable the button and change its text (prevents double-submit) */}
-      <button
-        type="submit"
-        disabled={submitting}
-        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
-      >
-        {submitting ? "Saving..." : submitLabel}
-      </button>
+      {/* row with two actions side by side: Save (submit) and Home (cancel) */}
+      <div className="flex items-center justify-between">
+        {/* while submitting, disable the button and change its text (prevents double-submit) */}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-50 bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 transition-colors"
+        >
+          {submitting ? "Saving..." : submitLabel}
+        </button>
+        {/* Home = a Link styled as a button; leaves the form and goes back to
+            the product list without a full reload (SPA navigation) */}
+        <Link
+          to="/products"
+          className="w-50 bg-green-500 text-white text-center font-semibold py-2 rounded-lg hover:bg-green-700"
+        >
+          Home
+        </Link>
+      </div>
     </form>
   );
 }

@@ -21,9 +21,6 @@ export default function Navbar() {
         <h1 className="text-white text-xl font-bold">Product CRUD</h1>
         <div className="flex gap-2">
           {/* to = which URL to go to. Clicking changes the route without a page reload. */}
-          <NavLink to="/" className={linkClass}>
-            Home
-          </NavLink>
           <NavLink to="/products" className={linkClass}>
             Products
           </NavLink>

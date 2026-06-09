@@ -6,13 +6,7 @@
 // shared shell that wraps the normal pages. The 404 page is left OUT of
 // that shell on purpose, so it shows with NO Navbar.
 // =============================================================
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  Outlet,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProductListPage from "./pages/ProductListPage";
 import ProductCreatePage from "./pages/ProductCreatePage";
@@ -54,9 +48,6 @@ export default function App() {
         {/* This parent Route has NO path — it only wraps its children in <Layout/>.
             Each child renders inside Layout's <Outlet/>, so they all get the Navbar. */}
         <Route element={<Layout />}>
-          {/* visiting "/" redirects straight to /products. replace = back button won't return to "/" */}
-          <Route path="/" element={<Navigate to="/products" replace />} />
-
           <Route path="/products" element={<ProductListPage />} />
           <Route path="/products/create" element={<ProductCreatePage />} />
 

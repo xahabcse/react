@@ -75,6 +75,34 @@ export default function Counter() {
    Q5. When does this component re-render?
    → Every time setCount changes the value. React re-runs the Counter
      function, reads the new count, and updates only what changed in the DOM.
+
+   Q6. setState is async — why can't you read the new value on the next line?
+   → React batches updates and applies them on the NEXT render (for
+     performance). So the fresh value shows up in the next render, not later
+     in the same function call.
+
+   Q7. Is the `0` in useState(0) set on every render?
+   → No. It is used only on the FIRST render (mount). On later renders React
+     keeps the stored value and ignores the initial argument.
+
+   Q8. What is lazy initialization?
+   → If computing the initial value is expensive, pass a FUNCTION so it runs
+     once instead of on every render:
+       useState(() => expensiveCompute())
+
+   Q9. Do two separate <Counter /> instances share state?
+   → No. Each instance has its own independent state; changing one does not
+     affect the other.
+
+   Q10. Why can't hooks be called inside if / loops?
+   → React tracks hooks by call ORDER across renders. Calling them
+     conditionally changes that order, so React mixes up which state is which.
+     Always call hooks at the top level, unconditionally.
+
+   Q11. When should something NOT be its own state?
+   → When it can be computed from existing state (a derived value, like
+     `remaining` in Todo). Compute it during render instead of storing it,
+     to avoid two values getting out of sync.
    ============================================================= */
 
 // =============================================================

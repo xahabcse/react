@@ -162,3 +162,78 @@ export default function Todo() {
    → It can be computed from todos (derived value). Anything derivable from
      existing state should NOT be its own state — that avoids sync bugs.
    ============================================================= */
+
+/* =============================================================
+   📝 INTERVIEW Q&A — Immutability / Array & Object updates (deep dive)
+   -------------------------------------------------------------
+   Q1. Why does immutability matter — how does React detect a change?
+   → React compares the old and new value by REFERENCE (shallow compare). A
+     brand-new array/object is a new reference, so the change is detected.
+     Mutating in place keeps the same reference → no re-render.
+
+   Q2. Which array methods should you avoid in state, and why?
+   → push, pop, shift, splice, sort, reverse — they MUTATE the original
+     array. Copy first: [...arr].sort(...).
+
+   Q3. What is [name] in setForm({ ...prev, [name]: value })?
+   → A computed property name — the variable's value becomes the key. That is
+     how one handler can serve every input.
+
+   Q4. Why wrap an object in ( ) when returning it from an arrow function?
+   → Otherwise JS reads the braces as the function body. The ( ) says "this
+     is an object literal", e.g. prev => ({ ...prev, x: 1 }).
+
+   Q5. How do you change a field inside a NESTED object?
+   → Copy every level, not just the top: { ...prev, address: { ...prev.address,
+     city } }. Copying only the outer level mutates the inner one.
+
+   Q6. Why .map() for update and .filter() for remove, not push/splice?
+   → map/filter RETURN a new array (immutable) and leave the original intact.
+     push/splice change the original, so no re-render happens.
+
+   Q7. Does spread (...) deep-copy or shallow-copy?
+   → Shallow (one level). { ...obj } copies the top level; nested objects/
+     arrays still share the SAME reference. So nested updates need a copy at
+     each level.
+
+   Q8. How do you immutably update the item at a specific index?
+   → Use .map() with the index:
+       setArr(prev => prev.map((item, i) => i === idx ? newValue : item))
+
+   Q9. How do you add an item to the START of an array (not the end)?
+   → Flip the spread order:
+       [newItem, ...prev]   // start
+       [...prev, newItem]   // end
+
+   Q10. How do you insert/remove at a specific position immutably?
+   → splice mutates, so use slice:
+       insert: [...prev.slice(0, idx), newItem, ...prev.slice(idx)]
+       remove: [...prev.slice(0, idx), ...prev.slice(idx + 1)]
+     If items have an id, filter is simpler for remove.
+
+   Q11. How do you sort/reverse a list in state?
+   → Copy first; sort/reverse mutate:
+       setArr(prev => [...prev].sort((a, b) => a.price - b.price))
+
+   Q12. How do you move/reorder an item immutably?
+   → Build a new array; splice the COPY, not the state:
+       setArr(prev => { const next = [...prev];
+         const [m] = next.splice(from, 1); next.splice(to, 0, m); return next; })
+
+   Q13. Why use the prev => updater form when updating arrays?
+   → New state depends on previous state ([...prev, x], prev.map(...)). The
+     updater always sees the LATEST state, even with batched/async updates.
+
+   Q14. What happens if you forget ...prev in an object update?
+   → The other fields are dropped. setForm({ name: value }) keeps only name
+     and loses price/inStock. Almost always start object updates with ...prev.
+
+   Q15. Why is the array index a bad key?
+   → On add/remove/reorder the index shifts, so React pairs the wrong row with
+     the wrong item and input/checkbox state gets mixed up. Use a stable unique
+     id (todo.id), not the index.
+
+   Q16. How do you tame deep/complex nested state?
+   → (a) flatten the shape, (b) use useReducer, or (c) a library like Immer
+     that lets you write mutating-style code but applies it immutably.
+   ============================================================= */

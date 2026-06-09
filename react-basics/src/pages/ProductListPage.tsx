@@ -130,3 +130,41 @@ export default function ProductListPage() {
    → The server already deleted it; to update the UI fast we just remove it
      from the local list (fewer network calls, snappier UX).
    ============================================================= */
+
+/* =============================================================
+   📝 INTERVIEW Q&A — Conditional rendering & lists
+   -------------------------------------------------------------
+   Q1. What are the conditional-rendering techniques, and when to use each?
+   → (a) ternary — this-or-that; (b) && — show if true, no else;
+     (c) early return — a whole different UI (loading/error);
+     (d) compute into a variable first — many conditions.
+
+   Q2. What is the "0" pitfall with && rendering?
+   → In {count && <X/>}, if count is 0 the number 0 itself gets rendered on
+     screen. Fix: make the condition a boolean — {count > 0 && <X/>}.
+
+   Q3. Why .map() for lists instead of a for loop?
+   → JSX { } needs an expression; .map() RETURNS an array (a value) you can
+     drop straight in. A for loop is a statement and can't sit inside JSX.
+
+   Q4. Why is key required, and why is the index a bad key?
+   → key lets React identify each item and update efficiently. With the index,
+     add/remove/reorder shifts indices, so React pairs the wrong item with the
+     wrong DOM/state. Use a stable unique id.
+
+   Q5. Is key visible in the UI or readable in the child?
+   → No. key is internal to React — it is not rendered to the DOM and the
+     child cannot read props.key.
+
+   Q6. What happens if two siblings share the same key?
+   → React warns and may mix items up (wrong updates). A key must be unique
+     among its siblings.
+
+   Q7. Early return vs ternary — when to pick which?
+   → If the whole screen differs (loading/error), an early return is cleaner.
+     If only a small part of the same UI changes, use a ternary or &&.
+
+   Q8. Should the filtered list be its own state?
+   → No. Derive it during render from products + search (filtered). A derived
+     value should never be state — it avoids sync bugs.
+   ============================================================= */

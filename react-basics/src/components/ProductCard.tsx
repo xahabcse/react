@@ -105,3 +105,35 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
    → No, props are immutable (read-only). To change them, change the
      parent's state, and new props will flow down.
    ============================================================= */
+
+/* =============================================================
+   📝 INTERVIEW Q&A — Props (additional)
+   -------------------------------------------------------------
+   Q6. Props vs state in one line?
+   → Props come from outside and are read-only. State lives inside the
+     component and it can change itself.
+
+   Q7. What is the `children` prop?
+   → Whatever you put between a component's opening and closing tags arrives
+     as props.children. Great for layout/wrapper components:
+       function Card({ children }) { return <div className="card">{children}</div>; }
+       <Card><h3>Hello</h3></Card>   // the <h3> is children
+
+   Q8. How do you make a prop optional and give it a default?
+   → Mark it with ? in the interface (initialData?: ...). Provide a fallback
+     where you use it, e.g. useState(initialData ?? emptyForm), or a default
+     parameter. Create passes nothing; Edit passes the data.
+
+   Q9. Is `key` a normal prop? Can the child read it?
+   → No. `key` is reserved by React for list reconciliation. You cannot read
+     props.key inside the child — it never reaches the component.
+
+   Q10. Can you forward many props at once?
+   → Yes, with spread: <ProductCard {...cardProps} />. Convenient, but it
+     hides exactly what is being passed, so use it deliberately.
+
+   Q11. How does data go from child back up to the parent?
+   → The parent passes a function as a prop (onDelete); the child calls it
+     with the data. Data flows down via props, events flow up via callbacks —
+     this is "lifting state up".
+   ============================================================= */

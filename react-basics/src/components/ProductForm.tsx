@@ -207,3 +207,110 @@ export default function ProductForm({
    → A checkbox's state is a boolean (on/off), so checked={true/false}; and
      in handleChange we read e.target.checked, not e.target.value.
    ============================================================= */
+
+/* =============================================================
+   📝 INTERVIEW Q&A — Event handling
+   -------------------------------------------------------------
+   Q1. How does React handle events? How is it different from HTML?
+   → You pass a FUNCTION to a JSX prop (onClick={fn}). Names are camelCase
+     (onClick, onChange) and the value is a function — in HTML it was a string
+     (onclick="...").
+
+   Q2. onClick={fn} vs onClick={fn()} — difference?
+   → The first passes a function reference, runs on click (correct). The
+     second CALLS fn during render (wrong). To pass an argument, wrap it:
+     onClick={() => fn(arg)}.
+
+   Q3. How do you pass an argument to a handler?
+   → Wrap it in an arrow function so it runs on the event:
+     onClick={() => onDelete(id)}.
+
+   Q4. What is a SyntheticEvent?
+   → React's cross-browser wrapper around the native event. It gives the same
+     API everywhere (e.target, e.preventDefault(), ...), so behavior is
+     consistent across browsers.
+
+   Q5. What does e.preventDefault() do? What happens without it?
+   → It stops the browser's default behavior. Without it, a form submit
+     reloads the whole page (state lost); a link navigates away.
+
+   Q6. What does e.stopPropagation() do?
+   → It stops the event from bubbling up to parent elements, so an inner
+     element's click does not also trigger an outer handler.
+
+   Q7. e.target vs e.currentTarget?
+   → e.target is the deepest element where the event actually happened.
+     e.currentTarget is the element the handler is attached to. The difference
+     matters with bubbling (e.g. a click inside a form/list).
+
+   Q8. checkbox: e.target.value or e.target.checked?
+   → e.target.checked (a boolean, on/off). Text inputs use e.target.value
+     (a string).
+
+   Q9. How does one handler serve many inputs?
+   → Give each input a name attribute, then in the handler read e.target.name
+     and update state with [name]: value (see handleChange above).
+
+   Q10. Does an inline arrow onClick={() => ...} hurt performance?
+   → It creates a new function each render — usually negligible. Only for very
+     large lists or heavy children is it worth optimizing with useCallback.
+   ============================================================= */
+
+/* =============================================================
+   📝 INTERVIEW Q&A — Controlled inputs
+   -------------------------------------------------------------
+   Q1. What does a controlled input need?
+   → Two things: value={state} (state → input) and onChange (input → state).
+     State is the single source of truth.
+
+   Q2. What if you set value but not onChange?
+   → The input becomes read-only/frozen (you can't type) and React warns.
+     Provide both, or use defaultValue for an uncontrolled input.
+
+   Q3. What's special about a number input?
+   → e.target.value is always a STRING, so convert with Number(value), else
+     math/comparisons break.
+
+   Q4. What's different about a checkbox?
+   → Use checked={boolean}, not value; and read e.target.checked in the
+     handler.
+
+   Q5. How do you set a textarea's value?
+   → With the value prop (<textarea value={x} />), not via children like HTML.
+
+   Q6. How does one handler serve a whole form?
+   → Keep the form as an object, give each input a name, and do
+     setForm(prev => ({ ...prev, [name]: value })).
+
+   Q7. value vs defaultValue?
+   → value = controlled (React owns it, set every render). defaultValue =
+     uncontrolled (set once initially, then the DOM keeps it).
+
+   Q8. Why use controlled inputs at all?
+   → Live validation, conditionally disabling the submit button, formatting/
+     transforming input, and one place (state) holding all the data.
+
+   Q9. How do you clear/reset a controlled input?
+   → Set its state back to the initial value (setText(""), setForm(emptyForm)).
+     Since value follows state, the input clears itself.
+
+   Q10. Is a file input (<input type="file">) controlled?
+   → No, always uncontrolled. For security JS can't set its value, so read
+     e.target.files in onChange and never pass value=.
+
+   Q11. How do you handle a group of checkboxes (multi-select)?
+   → Keep an array in state and add/remove the value immutably on change:
+     setTags(prev => checked ? [...prev, val] : prev.filter(t => t !== val)).
+
+   Q12. value goes from undefined to a string — what warning appears?
+   → "A component is changing an uncontrolled input to controlled." Start with
+     a defined value ("" not undefined) so it's controlled from the first render.
+
+   Q13. How do you format/transform input as the user types?
+   → Transform inside onChange before setState, e.g.
+     onChange={e => setCode(e.target.value.toUpperCase())}.
+
+   Q14. Why can controlled inputs feel laggy in big forms, and what helps?
+   → Every keystroke re-renders. Split components, debounce expensive work
+     (search/API), or for very large forms consider uncontrolled + refs.
+   ============================================================= */

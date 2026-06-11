@@ -30,6 +30,9 @@ export default function Navbar() {
           <NavLink to="/todo" className={linkClass}>
             Todo
           </NavLink>
+          <NavLink to="/password" className={linkClass}>
+            Password
+          </NavLink>
         </div>
       </div>
     </nav>

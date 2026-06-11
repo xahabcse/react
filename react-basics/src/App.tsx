@@ -15,6 +15,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import Counter from "./components/Counter";
 import Todo from "./components/Todo";
 import Error from "./components/Error";
+import PasswordGenerator from "./components/PasswordGenerator";
 
 // -------------------------------------------------------------
 // Layout = the shared shell (Navbar + page container) that wraps
@@ -60,6 +61,7 @@ export default function App() {
 
           {/* learning playground: a simple to-do list (array state practice) */}
           <Route path="/todo" element={<Todo />} />
+          <Route path="/password" element={<PasswordGenerator />} />
         </Route>
 
         {/* ---- Page WITHOUT the Navbar ---- */}
